@@ -3,25 +3,28 @@ import React, { useEffect, useState } from "react";
 function Calculator() {
   const [rows, setRows] = useState([]);
 
-  const [sum, setSum] = useState(0);
+  //const [sum, setSum] = useState(0);
 
-  const updateSum = () => {
-    setSum(
-      rows.length != 0
-        ? rows.reduce(
-            (prev, curr) =>
-              curr.disabled ? prev : prev + curr.sign * curr.value,
-            0
-          )
-        : 0
-    );
-  };
+  //const updateSum = () => {
+  // setSum(
+  const sum =
+    rows.length != 0
+      ? rows.reduce(
+          (prev, curr) =>
+            curr.disabled ? prev : prev + curr.sign * curr.value,
+          0
+        )
+      : 0;
+  //   );
+  //};
 
-  useEffect(() => updateSum(), [rows]);
+  //useEffect(() => updateSum(), [rows]);
 
   const onChangeRow = (newRow) => {
     setRows(rows.map((r) => (r.id == newRow.id ? { ...r, ...newRow } : r)));
   };
+
+  const onDelete = (id) => setRows(rows.filter((row) => row.id != id));
 
   return (
     <>
@@ -36,7 +39,11 @@ function Calculator() {
       <ul>
         {rows.map((row) => (
           <li key={row.id}>
-            <CalculatorRow row={row} onChangeRow={onChangeRow} />
+            <CalculatorRow
+              row={row}
+              onChangeRow={onChangeRow}
+              onDelete={onDelete}
+            />
           </li>
         ))}
       </ul>
@@ -54,8 +61,8 @@ function createRow() {
   };
 }
 
-function CalculatorRow({ row, onChangeRow }) {
-  const handleChange = (event) => {
+function CalculatorRow({ row, onChangeRow, onDelete }) {
+  const handleInputChange = (event) => {
     const value = Number(event.target.value) || 0;
     onChangeRow({ ...row, value });
   };
@@ -65,6 +72,12 @@ function CalculatorRow({ row, onChangeRow }) {
     onChangeRow({ ...row, sign });
   };
 
+  const handleDisable = () => {
+    onChangeRow({ ...row, disabled: !row.disabled });
+  };
+
+  const handleDelete = () => onDelete(row.id);
+
   return (
     <div className="input-group mb-3">
       <select
@@ -72,21 +85,23 @@ function CalculatorRow({ row, onChangeRow }) {
         aria-label="Select sign"
         value={row.sign === 1 ? "+" : "-"}
         onChange={handleSignChange}
+        disabled={row.disabled}
       >
         <option value="+">+</option>
         <option value="-">-</option>
       </select>
       <input
-        //dobbiamo mettere qualche constraint perché siano inseribili solo numeri
         type="text"
         aria-label="Insert number"
         value={row.value}
-        onChange={handleChange}
+        onChange={handleInputChange} //qua è sbagliato usarle così??
+        disabled={row.disabled}
       />
       <button
         type="button"
         className="btn btn-outline-dark"
         aria-label="Delete button"
+        onClick={handleDelete} //è giusto usare lambda functions?
       >
         Delete
       </button>
@@ -94,8 +109,9 @@ function CalculatorRow({ row, onChangeRow }) {
         type="button"
         className="btn btn-outline-dark"
         aria-label="Disable button"
+        onClick={handleDisable}
       >
-        Disable
+        {row.disabled ? "Enable" : "Disable"}
       </button>
     </div>
   );
