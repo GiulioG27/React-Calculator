@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import { Container, Row, Col } from "react-bootstrap";
+
 function Calculator() {
   const [rows, setRows] = useState([]);
 
@@ -28,26 +30,36 @@ function Calculator() {
 
   return (
     <>
-      <button
-        type="button"
-        className="btn btn-outline-dark"
-        aria-label="Add row button"
-        onClick={() => setRows([...rows, createRow()])}
-      >
-        Add row
-      </button>
-      <ul>
-        {rows.map((row) => (
-          <li key={row.id}>
-            <CalculatorRow
-              row={row}
-              onChangeRow={onChangeRow}
-              onDelete={onDelete}
-            />
-          </li>
-        ))}
-      </ul>
-      <h5>Result:{sum}</h5>
+      <Row className="mb-3">
+        <Col className="align-self-center">
+          <button
+            type="button"
+            className="btn btn-primary px-5"
+            aria-label="Add row button"
+            onClick={() => setRows([...rows, createRow()])}
+          >
+            Add row
+          </button>
+        </Col>
+      </Row>
+      {rows.length != 0 && (
+        <Row>
+          <ul id="calculator-rows">
+            {rows.map((row) => (
+              <li className="list-group-item" key={row.id}>
+                <CalculatorRow
+                  row={row}
+                  onChangeRow={onChangeRow}
+                  onDelete={onDelete}
+                />
+              </li>
+            ))}
+          </ul>
+        </Row>
+      )}
+      <Row>
+        <h5>Result:{sum}</h5>
+      </Row>
     </>
   );
 }
@@ -79,41 +91,51 @@ function CalculatorRow({ row, onChangeRow, onDelete }) {
   const handleDelete = () => onDelete(row.id);
 
   return (
-    <div className="input-group mb-3">
-      <select
-        className="form-select form-select-lg mb-3"
-        aria-label="Select sign"
-        value={row.sign === 1 ? "+" : "-"}
-        onChange={handleSignChange}
-        disabled={row.disabled}
-      >
-        <option value="+">+</option>
-        <option value="-">-</option>
-      </select>
-      <input
-        type="text"
-        aria-label="Insert number"
-        value={row.value}
-        onChange={handleInputChange} //qua è sbagliato usarle così??
-        disabled={row.disabled}
-      />
-      <button
-        type="button"
-        className="btn btn-outline-dark"
-        aria-label="Delete button"
-        onClick={handleDelete} //è giusto usare lambda functions?
-      >
-        Delete
-      </button>
-      <button
-        type="button"
-        className="btn btn-outline-dark"
-        aria-label="Disable button"
-        onClick={handleDisable}
-      >
-        {row.disabled ? "Enable" : "Disable"}
-      </button>
-    </div>
+    <Row className="input-group   ">
+      <Col xs={1} md={2} className="">
+        <select
+          className="form-select form-select-lg mb-3 form-element"
+          aria-label="Select sign"
+          value={row.sign === 1 ? "+" : "-"}
+          onChange={handleSignChange}
+          disabled={row.disabled}
+        >
+          <option value="+">+</option>
+          <option value="-">-</option>
+        </select>
+      </Col>
+      <Col xs={3} md={6} className="form-col ">
+        <input
+          type="text"
+          className="form-element"
+          aria-label="Insert number"
+          value={row.value}
+          onChange={handleInputChange}
+          disabled={row.disabled}
+        />
+      </Col>
+      <Col xs={2} md={2} className=" form-col">
+        <button
+          id="delete-btn"
+          type="button"
+          className="btn btn-danger form-element "
+          aria-label="Delete button"
+          onClick={handleDelete}
+        >
+          Delete
+        </button>
+      </Col>
+      <Col xs={2} md={2} className="form-col ">
+        <button
+          type="button"
+          className="btn btn-secondary form-element"
+          aria-label="Disable button"
+          onClick={handleDisable}
+        >
+          {row.disabled ? "Enable" : "Disable"}
+        </button>
+      </Col>
+    </Row>
   );
 }
 
