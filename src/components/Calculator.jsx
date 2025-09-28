@@ -1,27 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-import { Container, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 
 function Calculator() {
   const [rows, setRows] = useState([]);
 
-  //const [sum, setSum] = useState(0);
-
-  //const updateSum = () => {
-  // setSum(
-  const sum =
-    rows.length != 0
-      ? rows.reduce(
-          (prev, curr) =>
-            curr.disabled ? prev : prev + curr.sign * curr.value,
-          0
-        )
-      : 0;
-  //   );
-  //};
-
-  //useEffect(() => updateSum(), [rows]);
-
+  const sum = rows.reduce(
+    (prev, curr) => (curr.disabled ? prev : prev + curr.sign * curr.value),
+    0
+  );
   const onChangeRow = (newRow) => {
     setRows(rows.map((r) => (r.id == newRow.id ? { ...r, ...newRow } : r)));
   };
@@ -43,18 +30,15 @@ function Calculator() {
         </Col>
       </Row>
       {rows.length != 0 && (
-        <Row>
-          <ul id="calculator-rows">
-            {rows.map((row) => (
-              <li className="list-group-item" key={row.id}>
-                <CalculatorRow
-                  row={row}
-                  onChangeRow={onChangeRow}
-                  onDelete={onDelete}
-                />
-              </li>
-            ))}
-          </ul>
+        <Row id="calculator-rows">
+          {rows.map((row) => (
+            <CalculatorRow
+              key={row.id}
+              row={row}
+              onChangeRow={onChangeRow}
+              onDelete={onDelete}
+            />
+          ))}
         </Row>
       )}
       <Row>
@@ -92,7 +76,7 @@ function CalculatorRow({ row, onChangeRow, onDelete }) {
 
   return (
     <Row className="input-group   ">
-      <Col xs={1} md={2} className="">
+      <Col xs={1} md={2}>
         <select
           className="form-select form-select-lg mb-3 form-element"
           aria-label="Select sign"
@@ -116,7 +100,6 @@ function CalculatorRow({ row, onChangeRow, onDelete }) {
       </Col>
       <Col xs={2} md={2} className=" form-col">
         <button
-          id="delete-btn"
           type="button"
           className="btn btn-danger form-element "
           aria-label="Delete button"
