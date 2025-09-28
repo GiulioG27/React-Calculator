@@ -5,6 +5,10 @@
   text-align: center;
 }
 
+.btn.form-element {
+  width: 4.9rem;
+}
+
 .card {
   padding: 0;
   padding-left: "";
@@ -48,10 +52,11 @@
     width: 4rem !important;
   }
   .form-col {
-    padding-left: 4rem !important;
+    padding-left: 3.6rem !important;
+    padding-right: 1.5rem !important;
   }
   .form-element {
-    width: 4rem;
+    width: 3.5rem;
   }
 }
 
